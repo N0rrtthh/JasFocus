@@ -57,21 +57,23 @@ const MotivationalMessage = ({ message }) => (
   >
     <motion.div
       animate={{ 
-        scale: [1, 1.05, 1],
-        rotate: [0, 1, -1, 0]
+        scale: [1, 1.03, 1],
       }}
       transition={{ 
         duration: 2,
         repeat: Infinity,
         repeatType: 'reverse'
       }}
-      className="glass-card p-3 px-6 sm:p-4 sm:px-8 rounded-2xl border-2 border-yellow-400/50 shadow-2xl motivational-message"
+      className="glass-card p-3 px-6 sm:p-4 sm:px-8 rounded-2xl border-2 motivational-message"
       style={{
-        background: 'rgba(251, 191, 36, 0.15)',
-        boxShadow: '0 0 30px rgba(251, 191, 36, 0.4), 0 0 60px rgba(251, 191, 36, 0.2)'
+        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2), rgba(236, 72, 153, 0.2))',
+        borderImage: 'linear-gradient(135deg, #60a5fa, #a78bfa, #ec4899) 1',
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        boxShadow: '0 0 40px rgba(147, 51, 234, 0.5), 0 0 80px rgba(147, 51, 234, 0.3), 0 8px 32px rgba(0, 0, 0, 0.3)'
       }}
     >
-      <p className="text-white font-bold text-base sm:text-xl text-center">
+      <p className="text-white font-bold text-base sm:text-xl text-center drop-shadow-lg">
         {message}
       </p>
     </motion.div>
@@ -95,9 +97,19 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
       {/* Background overlay */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-0" style={{ pointerEvents: 'none' }}></div>
       
-      {/* Confetti particles - Higher z-index */}
-      <div className="absolute inset-0 z-30" style={{ pointerEvents: 'none' }}>
-        {[...Array(50)].map((_, i) => (
+      <motion.div
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+        className="glass-card p-8 sm:p-12 rounded-3xl border-4 border-green-400/50 shadow-2xl relative z-20 max-w-[90vw] overflow-hidden"
+        style={{
+          background: 'rgba(34, 197, 94, 0.15)',
+          boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)',
+          pointerEvents: 'none'
+        }}
+      >
+        {/* Confetti particles INSIDE the modal */}
+        {[...Array(40)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full"
@@ -105,43 +117,31 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
               left: '50%',
               top: '50%',
               background: ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'][Math.floor(Math.random() * 5)],
-              width: Math.random() * 16 + 8 + 'px',
-              height: Math.random() * 16 + 8 + 'px',
-              zIndex: 30,
+              width: Math.random() * 14 + 6 + 'px',
+              height: Math.random() * 14 + 6 + 'px',
+              zIndex: 1,
             }}
             initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
             animate={{
-              x: [(Math.random() - 0.5) * 1000],
-              y: [-400 - Math.random() * 400],
+              x: [(Math.random() - 0.5) * 600],
+              y: [(Math.random() - 0.5) * 400],
               opacity: [1, 1, 0],
-              scale: [0, 1, 1],
+              scale: [0, 1.2, 0.8],
               rotate: [0, Math.random() * 720]
             }}
             transition={{
-              duration: 2.5 + Math.random() * 0.5,
+              duration: 2 + Math.random() * 0.5,
               ease: [0.25, 0.46, 0.45, 0.94],
-              delay: Math.random() * 0.3
+              delay: Math.random() * 0.2
             }}
           />
         ))}
-      </div>
-      
-      <motion.div
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        className="glass-card p-8 sm:p-12 rounded-3xl border-4 border-green-400/50 shadow-2xl relative z-20 max-w-[90vw]"
-        style={{
-          background: 'rgba(34, 197, 94, 0.15)',
-          boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)',
-          pointerEvents: 'none'
-        }}
-      >
+        
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: [0, 1.2, 1] }}
           transition={{ duration: 0.6, times: [0, 0.6, 1] }}
-          className="flex flex-col items-center"
+          className="flex flex-col items-center relative z-10"
         >
           <motion.div
             animate={{
@@ -183,10 +183,17 @@ const Notification = ({ message, onClose }) => (
     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
     className="fixed top-4 sm:top-8 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[90vw] sm:max-w-lg px-4"
   >
-    <div className="glass-card p-4 px-6 sm:p-5 sm:px-8 rounded-2xl border-2 border-green-400/50 shadow-2xl notification-glow">
+    <div 
+      className="glass-card p-4 px-6 sm:p-5 sm:px-8 rounded-2xl border-2 shadow-2xl notification-glow"
+      style={{
+        background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.2))',
+        borderColor: 'rgba(74, 222, 128, 0.6)',
+        boxShadow: '0 0 40px rgba(34, 197, 94, 0.6), 0 0 80px rgba(34, 197, 94, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3)'
+      }}
+    >
       <div className="flex items-center justify-center space-x-3">
-        <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-green-400 flex-shrink-0" />
-        <p className="text-white font-semibold text-base sm:text-lg text-center break-words">{message}</p>
+        <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-green-400 flex-shrink-0 drop-shadow-lg" />
+        <p className="text-white font-semibold text-base sm:text-lg text-center break-words drop-shadow-lg">{message}</p>
       </div>
     </div>
   </motion.div>
@@ -605,7 +612,7 @@ function App() {
   // Function to show notification
   const showNotification = (message) => {
     setNotification(message);
-    setTimeout(() => setNotification(null), 4000);
+    setTimeout(() => setNotification(null), 5000); // Increased to 5 seconds
   };
 
   // Function to show motivational message
