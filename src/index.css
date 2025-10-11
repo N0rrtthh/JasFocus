@@ -1,0 +1,300 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    /* Custom background for premium feel */
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Glassmorphism/iOS Style Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: white;
+}
+
+/* Colored Bento Boxes */
+.bento-box-tasks {
+  background: rgba(59, 130, 246, 0.12); /* Blue tint */
+  box-shadow: 0 8px 32px 0 rgba(59, 130, 246, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  color: white;
+}
+
+.bento-box-stats {
+  background: rgba(168, 85, 247, 0.12); /* Purple tint */
+  box-shadow: 0 8px 32px 0 rgba(168, 85, 247, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(192, 132, 252, 0.3);
+  color: white;
+}
+
+.bento-box-completed {
+  background: rgba(34, 197, 94, 0.12); /* Green tint */
+  box-shadow: 0 8px 32px 0 rgba(34, 197, 94, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: white;
+}
+
+/* Bento box hover effects */
+.bento-box-tasks:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.bento-box-stats:hover {
+  border-color: rgba(192, 132, 252, 0.5);
+  box-shadow: 0 12px 40px 0 rgba(168, 85, 247, 0.4);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.bento-box-completed:hover {
+  border-color: rgba(74, 222, 128, 0.5);
+  box-shadow: 0 12px 40px 0 rgba(34, 197, 94, 0.4);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Smooth transitions */
+.bento-box-tasks,
+.bento-box-stats,
+.bento-box-completed {
+  transition: all 0.3s ease;
+}
+
+
+/* Bento Grid Layout */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  gap: 16px;
+  max-width: 1400px;
+  width: 90%;
+  margin: 40px auto;
+}
+
+.bento-item-1 {
+  grid-column: span 4; /* Full width for the timer at the top */
+}
+
+.bento-item-2 {
+  grid-column: span 4; /* Full width for task list on mobile */
+}
+
+.bento-item-3 {
+  grid-column: span 4; /* Full width for stats on mobile */
+}
+
+.bento-item-4 {
+  grid-column: span 4; /* Full width for completed tasks on mobile */
+}
+
+@media (min-width: 1024px) {
+  .bento-item-1 {
+    grid-column: span 4; /* Full width on large screens - TIMER AT TOP */
+  }
+  .bento-item-2 {
+    grid-column: span 2; /* Half width on large screens - TASK LIST */
+  }
+  .bento-item-3 {
+    grid-column: span 2; /* Half width on large screens - STATS */
+  }
+  .bento-item-4 {
+    grid-column: span 4; /* Full width on large screens - COMPLETED TASKS */
+  }
+}
+
+/* Custom Scrollbar for iOS feel */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Timer Gradient Text */
+.timer-text-gradient {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Timer Glow Effect */
+.timer-glow {
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.3) 0%, rgba(167, 139, 250, 0.2) 50%, transparent 70%);
+  animation: glow-pulse 2s ease-in-out infinite;
+  filter: blur(20px);
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.95); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* Notification Glow */
+.notification-glow {
+  box-shadow: 0 0 30px rgba(74, 222, 128, 0.4), 0 0 60px rgba(74, 222, 128, 0.2);
+}
+
+/* Task Completion Animation */
+@keyframes taskComplete {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1.1) rotate(2deg);
+  }
+  40% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.task-complete-animation {
+  animation: taskComplete 0.8s ease-out forwards;
+}
+
+/* Celebration Particles */
+@keyframes confettiFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+
+/* Success Checkmark Animation */
+@keyframes successPop {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.3) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.success-checkmark {
+  animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Aesthetic Font Classes */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.timer-font {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.05em;
+  font-weight: 800;
+}
+
+/* iOS-style button enhancements */
+button {
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+button:hover::before {
+  left: 100%;
+}
