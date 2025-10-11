@@ -64,7 +64,7 @@ const MotivationalMessage = ({ message }) => (
         repeat: Infinity,
         repeatType: 'reverse'
       }}
-      className="glass-card p-3 px-6 sm:p-4 sm:px-8 rounded-2xl border-2 motivational-message"
+      className="glass-card p-3 px-6 sm:p-4 sm:px-8 rounded-[24px] border-2 motivational-message"
       style={{
         background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2), rgba(236, 72, 153, 0.2))',
         borderImage: 'linear-gradient(135deg, #60a5fa, #a78bfa, #ec4899) 1',
@@ -97,19 +97,9 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
       {/* Background overlay */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-0" style={{ pointerEvents: 'none' }}></div>
       
-      <motion.div
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        className="glass-card p-8 sm:p-12 rounded-3xl border-4 border-green-400/50 shadow-2xl relative z-20 max-w-[90vw] overflow-hidden"
-        style={{
-          background: 'rgba(34, 197, 94, 0.15)',
-          boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)',
-          pointerEvents: 'none'
-        }}
-      >
-        {/* Confetti particles INSIDE the modal */}
-        {[...Array(40)].map((_, i) => (
+      {/* Confetti particles OUTSIDE the modal */}
+      <div className="absolute inset-0 z-30 overflow-hidden" style={{ pointerEvents: 'none' }}>
+        {[...Array(50)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full"
@@ -117,26 +107,37 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
               left: '50%',
               top: '50%',
               background: ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'][Math.floor(Math.random() * 5)],
-              width: Math.random() * 14 + 6 + 'px',
-              height: Math.random() * 14 + 6 + 'px',
-              zIndex: 1,
+              width: Math.random() * 16 + 8 + 'px',
+              height: Math.random() * 16 + 8 + 'px',
             }}
             initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
             animate={{
-              x: [(Math.random() - 0.5) * 600],
-              y: [(Math.random() - 0.5) * 400],
+              x: [(Math.random() - 0.5) * 1000],
+              y: [(Math.random() - 0.5) * 800],
               opacity: [1, 1, 0],
               scale: [0, 1.2, 0.8],
               rotate: [0, Math.random() * 720]
             }}
             transition={{
-              duration: 2 + Math.random() * 0.5,
+              duration: 2.5 + Math.random() * 0.5,
               ease: [0.25, 0.46, 0.45, 0.94],
               delay: Math.random() * 0.2
             }}
           />
         ))}
-        
+      </div>
+      
+      <motion.div
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+        className="glass-card p-8 sm:p-12 rounded-[32px] border-4 border-green-400/50 shadow-2xl relative z-20 max-w-[90vw]"
+        style={{
+          background: 'rgba(34, 197, 94, 0.15)',
+          boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)',
+          pointerEvents: 'none'
+        }}
+      >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: [0, 1.2, 1] }}
@@ -177,23 +178,23 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
 
 const Notification = ({ message, onClose }) => (
   <motion.div
-    initial={{ opacity: 0, y: -100, scale: 0.9 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    exit={{ opacity: 0, y: -100, scale: 0.9 }}
+    initial={{ opacity: 0, y: -100, x: 0 }}
+    animate={{ opacity: 1, y: 0, x: 0 }}
+    exit={{ opacity: 0, y: -100, x: 0 }}
     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-    className="fixed top-4 sm:top-8 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[90vw] sm:max-w-lg px-4"
+    className="fixed top-4 sm:top-8 right-4 sm:right-8 z-50 w-auto max-w-[90vw] sm:max-w-md"
   >
     <div 
-      className="glass-card p-4 px-6 sm:p-5 sm:px-8 rounded-2xl border-2 shadow-2xl notification-glow"
+      className="glass-card p-4 px-6 sm:p-5 sm:px-8 rounded-[24px] border-2 shadow-2xl notification-glow"
       style={{
         background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.2))',
         borderColor: 'rgba(74, 222, 128, 0.6)',
         boxShadow: '0 0 40px rgba(34, 197, 94, 0.6), 0 0 80px rgba(34, 197, 94, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3)'
       }}
     >
-      <div className="flex items-center justify-center space-x-3">
+      <div className="flex items-center space-x-3">
         <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-green-400 flex-shrink-0 drop-shadow-lg" />
-        <p className="text-white font-semibold text-base sm:text-lg text-center break-words drop-shadow-lg">{message}</p>
+        <p className="text-white font-semibold text-base sm:text-lg break-words drop-shadow-lg">{message}</p>
       </div>
     </div>
   </motion.div>
