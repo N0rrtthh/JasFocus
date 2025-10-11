@@ -988,7 +988,7 @@ function App() {
       
       <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 drop-shadow-lg tracking-tight text-center">
         <Timer className="inline w-8 h-8 sm:w-10 sm:h-10 mr-2 text-blue-400" />
-        Jas Focus
+        JasFocus
       </h1>
       <div className="bento-grid">
         {/* Timer Display - No box, just the content */}
