@@ -57,23 +57,26 @@ const MotivationalMessage = ({ message }) => (
   >
     <motion.div
       animate={{ 
-        scale: [1, 1.03, 1],
+        scale: [1, 1.02, 1],
       }}
       transition={{ 
-        duration: 2,
+        duration: 2.5,
         repeat: Infinity,
         repeatType: 'reverse'
       }}
-      className="glass-card p-3 px-6 sm:p-4 sm:px-8 rounded-[24px] border-2 motivational-message"
+      className="p-4 px-8 sm:p-5 sm:px-10 rounded-full border-2 motivational-message"
       style={{
-        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2), rgba(236, 72, 153, 0.2))',
+        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25), rgba(236, 72, 153, 0.25))',
         borderImage: 'linear-gradient(135deg, #60a5fa, #a78bfa, #ec4899) 1',
         borderWidth: '2px',
         borderStyle: 'solid',
-        boxShadow: '0 0 40px rgba(147, 51, 234, 0.5), 0 0 80px rgba(147, 51, 234, 0.3), 0 8px 32px rgba(0, 0, 0, 0.3)'
+        borderRadius: '9999px',
+        boxShadow: '0 0 40px rgba(147, 51, 234, 0.5), 0 0 80px rgba(147, 51, 234, 0.3), 0 8px 32px rgba(0, 0, 0, 0.3)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
       }}
     >
-      <p className="text-white font-bold text-base sm:text-xl text-center drop-shadow-lg">
+      <p className="text-white font-bold text-base sm:text-xl text-center drop-shadow-lg whitespace-nowrap">
         {message}
       </p>
     </motion.div>
@@ -99,32 +102,39 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
       
       {/* Confetti particles OUTSIDE the modal */}
       <div className="absolute inset-0 z-30 overflow-hidden" style={{ pointerEvents: 'none' }}>
-        {[...Array(50)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: '50%',
-              top: '50%',
-              background: ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'][Math.floor(Math.random() * 5)],
-              width: Math.random() * 16 + 8 + 'px',
-              height: Math.random() * 16 + 8 + 'px',
-            }}
-            initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
-            animate={{
-              x: [(Math.random() - 0.5) * 1000],
-              y: [(Math.random() - 0.5) * 800],
-              opacity: [1, 1, 0],
-              scale: [0, 1.2, 0.8],
-              rotate: [0, Math.random() * 720]
-            }}
-            transition={{
-              duration: 2.5 + Math.random() * 0.5,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              delay: Math.random() * 0.2
-            }}
-          />
-        ))}
+        {[...Array(25)].map((_, i) => {
+          const angle = (Math.PI * 2 * i) / 25;
+          const distance = 300 + Math.random() * 200;
+          const xMovement = Math.cos(angle) * distance;
+          const yMovement = Math.sin(angle) * distance - 100;
+          
+          return (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                left: '50%',
+                top: '50%',
+                background: ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'][Math.floor(Math.random() * 5)],
+                width: Math.random() * 10 + 6 + 'px',
+                height: Math.random() * 10 + 6 + 'px',
+              }}
+              initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+              animate={{
+                x: [0, xMovement],
+                y: [0, yMovement],
+                opacity: [1, 1, 0],
+                scale: [0, 1, 0.8],
+                rotate: [0, Math.random() * 360]
+              }}
+              transition={{
+                duration: 2 + Math.random() * 0.8,
+                ease: [0.34, 1.56, 0.64, 1],
+                delay: Math.random() * 0.15
+              }}
+            />
+          );
+        })}
       </div>
       
       <motion.div
@@ -616,12 +626,6 @@ function App() {
     setTimeout(() => setNotification(null), 5000); // Increased to 5 seconds
   };
 
-  // Function to show motivational message
-  const showMotivation = () => {
-    setMotivationalMessage(getRandomMotivation());
-    setTimeout(() => setMotivationalMessage(null), 10000); // Changed to 10 seconds
-  };
-
   // Function to find the next uncompleted task
   const findNextTask = useCallback(() => {
     const currentIndex = tasks.findIndex(t => t.id === currentTaskId);
@@ -633,6 +637,7 @@ function App() {
   useEffect(() => {
     let interval = null;
     let motivationInterval = null;
+    let motivationTimeout = null;
 
     if (currentTaskId && !isPaused && currentTask && currentTask.timeRemaining > 0) {
       interval = setInterval(() => {
@@ -646,13 +651,25 @@ function App() {
         );
       }, 1000);
 
-      // Show motivational messages every 30 seconds while task is running
-      motivationInterval = setInterval(() => {
-        showMotivation();
-      }, 30000);
+      // Function to cycle motivational messages
+      const cycleMotivation = () => {
+        // Clear any existing message
+        setMotivationalMessage(null);
+        
+        // Show new message after a brief delay
+        motivationTimeout = setTimeout(() => {
+          setMotivationalMessage(getRandomMotivation());
+        }, 100);
+      };
 
       // Show initial motivation when task starts
-      showMotivation();
+      cycleMotivation();
+      
+      // Show new motivational message every 10 seconds
+      motivationInterval = setInterval(() => {
+        cycleMotivation();
+      }, 10000); // Changed to 10 seconds
+
     } else if (currentTask && currentTask.timeRemaining === 0) {
       // Task completed, auto-advance logic
       clearInterval(interval);
@@ -688,6 +705,7 @@ function App() {
     return () => {
       clearInterval(interval);
       if (motivationInterval) clearInterval(motivationInterval);
+      if (motivationTimeout) clearTimeout(motivationTimeout);
     };
   }, [currentTaskId, isPaused, currentTask, findNextTask]);
 
