@@ -89,44 +89,52 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      style={{ pointerEvents: 'none' }}
     >
-      {/* Confetti particles */}
-      {[...Array(30)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            left: '50%',
-            top: '50%',
-            background: ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'][Math.floor(Math.random() * 5)],
-            width: Math.random() * 12 + 6 + 'px',
-            height: Math.random() * 12 + 6 + 'px',
-          }}
-          initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
-          animate={{
-            x: [(Math.random() - 0.5) * 800],
-            y: [-300 - Math.random() * 300],
-            opacity: [1, 1, 0],
-            scale: [0, 1, 1],
-            rotate: [0, Math.random() * 720]
-          }}
-          transition={{
-            duration: 2 + Math.random() * 0.5,
-            ease: [0.25, 0.46, 0.45, 0.94],
-            delay: Math.random() * 0.2
-          }}
-        />
-      ))}
+      {/* Background overlay */}
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-0" style={{ pointerEvents: 'none' }}></div>
+      
+      {/* Confetti particles - Higher z-index */}
+      <div className="absolute inset-0 z-30" style={{ pointerEvents: 'none' }}>
+        {[...Array(50)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: '50%',
+              top: '50%',
+              background: ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'][Math.floor(Math.random() * 5)],
+              width: Math.random() * 16 + 8 + 'px',
+              height: Math.random() * 16 + 8 + 'px',
+              zIndex: 30,
+            }}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+            animate={{
+              x: [(Math.random() - 0.5) * 1000],
+              y: [-400 - Math.random() * 400],
+              opacity: [1, 1, 0],
+              scale: [0, 1, 1],
+              rotate: [0, Math.random() * 720]
+            }}
+            transition={{
+              duration: 2.5 + Math.random() * 0.5,
+              ease: [0.25, 0.46, 0.45, 0.94],
+              delay: Math.random() * 0.3
+            }}
+          />
+        ))}
+      </div>
       
       <motion.div
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        className="glass-card p-8 sm:p-12 rounded-3xl border-4 border-green-400/50 shadow-2xl relative z-10 max-w-[90vw]"
+        className="glass-card p-8 sm:p-12 rounded-3xl border-4 border-green-400/50 shadow-2xl relative z-20 max-w-[90vw]"
         style={{
           background: 'rgba(34, 197, 94, 0.15)',
-          boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)'
+          boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)',
+          pointerEvents: 'none'
         }}
       >
         <motion.div
