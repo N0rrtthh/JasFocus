@@ -49,11 +49,11 @@ const formatTime = (seconds) => {
 
 const MotivationalMessage = ({ message }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.8, y: 20 }}
+    initial={{ opacity: 0, scale: 0.8, y: 10 }}
     animate={{ opacity: 1, scale: 1, y: 0 }}
-    exit={{ opacity: 0, scale: 0.8, y: -20 }}
+    exit={{ opacity: 0, scale: 0.8, y: -10 }}
     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-    className="fixed bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-40 px-4 max-w-[90vw]"
+    className="w-full flex justify-center mt-4"
   >
     <motion.div
       animate={{ 
@@ -367,7 +367,7 @@ const CompletedTasksList = ({ tasks, onRemove }) => {
   );
 };
 
-const TimerDisplay = ({ currentTask, isPaused }) => {
+const TimerDisplay = ({ currentTask, isPaused, motivationalMessage }) => {
   if (!currentTask) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-white/70 py-8">
@@ -381,16 +381,16 @@ const TimerDisplay = ({ currentTask, isPaused }) => {
     100 - (currentTask.timeRemaining / currentTask.initialTime) * 100;
 
   return (
-    <div className="flex flex-col items-center justify-center h-full relative py-4 sm:py-8">
-      <h2 className="text-2xl sm:text-4xl font-bold text-white/90 mb-6 sm:mb-8 px-4 text-center tracking-tight break-words max-w-full">
+    <div className="flex flex-col items-center justify-center h-full relative py-4 sm:py-8 px-4">
+      <h2 className="text-2xl sm:text-4xl font-bold text-white/90 mb-6 sm:mb-8 text-center tracking-tight break-words max-w-full">
         {currentTask.text}
       </h2>
       
-      <div className="relative w-64 h-64 sm:w-80 sm:h-80 mb-6 sm:mb-8 timer-display-mobile">
+      <div className="relative w-64 h-64 sm:w-80 sm:h-80 mb-6 sm:mb-8 timer-display-mobile flex-shrink-0">
         {/* Glow effect background */}
         <div className="absolute inset-0 rounded-full timer-glow"></div>
         
-        <svg className="w-full h-full transform -rotate-90 relative z-10">
+        <svg className="w-full h-full transform -rotate-90 relative z-10" viewBox="0 0 256 256">
           <defs>
             <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#60a5fa" />
@@ -445,7 +445,7 @@ const TimerDisplay = ({ currentTask, isPaused }) => {
         </div>
       </div>
       
-      <div className={`flex items-center space-x-2 sm:space-x-3 text-base sm:text-xl font-semibold ${isPaused ? 'text-red-400 pulse-animation' : 'text-green-400'}`}>
+      <div className={`flex items-center space-x-2 sm:space-x-3 text-base sm:text-xl font-semibold mb-4 ${isPaused ? 'text-red-400 pulse-animation' : 'text-green-400'}`}>
         {isPaused ? (
           <>
             <Pause className="w-5 h-5 sm:w-7 sm:h-7" />
@@ -458,6 +458,13 @@ const TimerDisplay = ({ currentTask, isPaused }) => {
           </>
         )}
       </div>
+
+      {/* Motivational message displayed under the timer */}
+      <AnimatePresence>
+        {motivationalMessage && !isPaused && (
+          <MotivationalMessage message={motivationalMessage} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -596,7 +603,7 @@ function App() {
   // Function to show motivational message
   const showMotivation = () => {
     setMotivationalMessage(getRandomMotivation());
-    setTimeout(() => setMotivationalMessage(null), 3000);
+    setTimeout(() => setMotivationalMessage(null), 10000); // Changed to 10 seconds
   };
 
   // Function to find the next uncompleted task
@@ -723,7 +730,6 @@ function App() {
     <div className="p-2 sm:p-4 w-full min-h-screen flex flex-col items-center">
       <AnimatePresence>
         {notification && <Notification message={notification} />}
-        {motivationalMessage && <MotivationalMessage message={motivationalMessage} />}
         {celebratingTask && (
           <CompletionCelebration 
             taskName={celebratingTask} 
@@ -738,8 +744,8 @@ function App() {
       </h1>
       <div className="bento-grid">
         {/* Timer Display - No box, just the content */}
-        <div className="bento-item-1" style={{ minHeight: '350px' }}>
-          <TimerDisplay currentTask={currentTask} isPaused={isPaused} />
+        <div className="bento-item-1" style={{ minHeight: '400px' }}>
+          <TimerDisplay currentTask={currentTask} isPaused={isPaused} motivationalMessage={motivationalMessage} />
         </div>
 
         {/* Bento Item 2: Task List and Input - Blue */}
