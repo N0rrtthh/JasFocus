@@ -396,7 +396,7 @@ function App() {
     <div className="p-4 w-full min-h-screen flex flex-col items-center">
       <h1 className="text-5xl font-extrabold text-white mb-8 drop-shadow-lg">
         <Zap className="inline w-10 h-10 mr-2 text-blue-400" />
-        Jas Focus
+        JasFocus
       </h1>
       <div className="bento-grid">
         {/* Bento Item 1: Current Task Timer - NOW AT TOP */}
