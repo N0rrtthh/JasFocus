@@ -1,4 +1,4 @@
-# ⏱️ Jas Focus - Premium iOS-Style Timer App
+# ⏱️ Jas Focus - Timer App
 
 A beautiful, minimalist productivity timer app with iOS-style design, featuring automatic task progression, motivational messages, and satisfying completion animations.
 
