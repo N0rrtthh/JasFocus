@@ -47,39 +47,78 @@ const formatTime = (seconds) => {
 
 // --- Components ---
 
+// Motivational Message Component
+
 const MotivationalMessage = ({ message }) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.8, y: 10 }}
-    animate={{ opacity: 1, scale: 1, y: 0 }}
-    exit={{ opacity: 0, scale: 0.8, y: -10 }}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -10 }}
     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
     className="w-full flex justify-center mt-4"
   >
     <motion.div
       animate={{ 
-        scale: [1, 1.02, 1],
+        scale: [1, 1.05, 1],
       }}
       transition={{ 
-        duration: 2.5,
+        duration: 2,
         repeat: Infinity,
         repeatType: 'reverse'
       }}
-      className="p-4 px-8 sm:p-5 sm:px-10 rounded-full border-2 motivational-message"
-      style={{
-        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25), rgba(236, 72, 153, 0.25))',
-        borderImage: 'linear-gradient(135deg, #60a5fa, #a78bfa, #ec4899) 1',
-        borderWidth: '2px',
-        borderStyle: 'solid',
-        borderRadius: '9999px',
-        boxShadow: '0 0 40px rgba(147, 51, 234, 0.5), 0 0 80px rgba(147, 51, 234, 0.3), 0 8px 32px rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-      }}
     >
-      <p className="text-white font-bold text-base sm:text-xl text-center drop-shadow-lg whitespace-nowrap">
+      <p className="text-white font-bold text-base sm:text-xl text-center whitespace-nowrap"
+         style={{
+           textShadow: '0 0 30px rgba(147, 51, 234, 0.8), 0 0 60px rgba(147, 51, 234, 0.5), 0 4px 20px rgba(0, 0, 0, 0.5)'
+         }}
+      >
         {message}
       </p>
     </motion.div>
+  </motion.div>
+);
+
+const CountdownOverlay = ({ taskName, countdown }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="fixed inset-0 z-40 flex items-center justify-center px-4"
+    style={{ 
+      background: 'rgba(0, 0, 0, 0.7)',
+      backdropFilter: 'blur(10px)'
+    }}
+  >
+    <div className="flex flex-col items-center">
+      <motion.p
+        className="text-white text-xl sm:text-2xl font-semibold mb-6 text-center"
+      >
+        Next Task: "{taskName}"
+      </motion.p>
+      <motion.div
+        key={countdown}
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 1.5, opacity: 0 }}
+        className="text-9xl sm:text-[12rem] font-extrabold"
+        style={{
+          background: 'linear-gradient(135deg, #60a5fa, #a78bfa, #ec4899)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textShadow: '0 0 40px rgba(147, 51, 234, 0.5)'
+        }}
+      >
+        {countdown}
+      </motion.div>
+      <motion.p
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 1, repeat: Infinity }}
+        className="text-white/70 text-lg sm:text-xl mt-6"
+      >
+        Get ready...
+      </motion.p>
+    </div>
   </motion.div>
 );
 
@@ -88,6 +127,28 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
     const timer = setTimeout(onComplete, 2000);
     return () => clearTimeout(timer);
   }, [onComplete]);
+
+  // Generate confetti data ONCE when component mounts
+  const confettiParticles = React.useMemo(() => {
+    return [...Array(25)].map((_, i) => {
+      const angle = (Math.PI * 2 * i) / 25;
+      const distance = 300 + Math.random() * 200;
+      const xMovement = Math.cos(angle) * distance;
+      const yMovement = Math.sin(angle) * distance - 100;
+      const colors = ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'];
+      
+      return {
+        id: i,
+        xMovement,
+        yMovement,
+        color: colors[Math.floor(Math.random() * 5)],
+        size: Math.random() * 10 + 6,
+        rotation: Math.random() * 360,
+        duration: 2 + Math.random() * 0.8,
+        delay: Math.random() * 0.15
+      };
+    });
+  }, []);
 
   return (
     <motion.div
@@ -100,59 +161,43 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
       {/* Background overlay */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm z-0" style={{ pointerEvents: 'none' }}></div>
       
-      {/* Confetti particles OUTSIDE the modal */}
+      {/* Confetti particles OUTSIDE - natural movement */}
       <div className="absolute inset-0 z-30 overflow-hidden" style={{ pointerEvents: 'none' }}>
-        {[...Array(25)].map((_, i) => {
-          const angle = (Math.PI * 2 * i) / 25;
-          const distance = 300 + Math.random() * 200;
-          const xMovement = Math.cos(angle) * distance;
-          const yMovement = Math.sin(angle) * distance - 100;
-          
-          return (
-            <motion.div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                left: '50%',
-                top: '50%',
-                background: ['#60a5fa', '#a78bfa', '#ec4899', '#34d399', '#fbbf24'][Math.floor(Math.random() * 5)],
-                width: Math.random() * 10 + 6 + 'px',
-                height: Math.random() * 10 + 6 + 'px',
-              }}
-              initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
-              animate={{
-                x: [0, xMovement],
-                y: [0, yMovement],
-                opacity: [1, 1, 0],
-                scale: [0, 1, 0.8],
-                rotate: [0, Math.random() * 360]
-              }}
-              transition={{
-                duration: 2 + Math.random() * 0.8,
-                ease: [0.34, 1.56, 0.64, 1],
-                delay: Math.random() * 0.15
-              }}
-            />
-          );
-        })}
+        {confettiParticles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute rounded-full"
+            style={{
+              left: '50%',
+              top: '50%',
+              background: particle.color,
+              width: particle.size + 'px',
+              height: particle.size + 'px',
+            }}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+            animate={{
+              x: [0, particle.xMovement],
+              y: [0, particle.yMovement],
+              opacity: [1, 1, 0],
+              scale: [0, 1, 0.8],
+              rotate: [0, particle.rotation]
+            }}
+            transition={{
+              duration: particle.duration,
+              ease: [0.34, 1.56, 0.64, 1],
+              delay: particle.delay
+            }}
+          />
+        ))}
       </div>
       
-      <motion.div
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        className="glass-card p-8 sm:p-12 rounded-[32px] border-4 border-green-400/50 shadow-2xl relative z-20 max-w-[90vw]"
-        style={{
-          background: 'rgba(34, 197, 94, 0.15)',
-          boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)',
-          pointerEvents: 'none'
-        }}
-      >
+      {/* Content without box */}
+      <div className="flex flex-col items-center relative z-20">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: [0, 1.2, 1] }}
           transition={{ duration: 0.6, times: [0, 0.6, 1] }}
-          className="flex flex-col items-center relative z-10"
+          className="flex flex-col items-center"
         >
           <motion.div
             animate={{
@@ -168,7 +213,7 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-3xl sm:text-5xl font-bold text-white mb-2 sm:mb-3 tracking-tight"
+            className="text-3xl sm:text-5xl font-bold text-white mb-2 sm:mb-3 tracking-tight drop-shadow-[0_0_20px_rgba(34,197,94,0.8)]"
           >
             Task Complete!
           </motion.h2>
@@ -176,12 +221,12 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-lg sm:text-2xl text-green-300 font-medium text-center max-w-md px-4"
+            className="text-lg sm:text-2xl text-green-300 font-medium text-center max-w-md px-4 drop-shadow-[0_0_15px_rgba(74,222,128,0.6)]"
           >
             "{taskName}"
           </motion.p>
         </motion.div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };
@@ -246,12 +291,31 @@ const Button = ({ children, onClick, className = '', icon: Icon, variant = 'defa
   );
 };
 
-const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) => {
+const TaskItem = ({ task, onToggle, onRemove, onStart, onEdit, isCurrent, isPaused, dragHandleProps }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(task.text);
+  
   const statusClass = task.completed
     ? 'bg-green-500/20 border-green-500/50'
     : isCurrent
     ? 'bg-blue-500/20 border-blue-500/50'
     : 'bg-white/10 border-white/20';
+
+  const handleSaveEdit = () => {
+    if (editText.trim()) {
+      onEdit(task.id, editText.trim());
+      setIsEditing(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSaveEdit();
+    } else if (e.key === 'Escape') {
+      setEditText(task.text);
+      setIsEditing(false);
+    }
+  };
 
   return (
     <motion.div
@@ -261,6 +325,8 @@ const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) =>
       exit={{ opacity: 0, x: -50 }}
       transition={{ duration: 0.3 }}
       className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 mb-2 rounded-lg border ${statusClass} fade-in gap-2 sm:gap-0`}
+      style={{ cursor: dragHandleProps ? 'grab' : 'default' }}
+      {...dragHandleProps}
     >
       <div className="flex items-center flex-grow min-w-0 w-full sm:w-auto">
         <input
@@ -269,13 +335,27 @@ const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) =>
           onChange={() => onToggle(task.id)}
           className="form-checkbox h-5 w-5 text-blue-500 bg-white/10 border-white/30 rounded focus:ring-blue-500 transition duration-150 ease-in-out flex-shrink-0"
         />
-        <span
-          className={`ml-3 text-base sm:text-lg font-medium break-words ${
-            task.completed ? 'line-through text-white/50' : 'text-white'
-          }`}
-        >
-          {task.text}
-        </span>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            onBlur={handleSaveEdit}
+            onKeyDown={handleKeyPress}
+            autoFocus
+            className="ml-3 text-base sm:text-lg font-medium bg-white/10 border border-blue-400/50 rounded px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow"
+          />
+        ) : (
+          <span
+            onClick={() => !task.completed && setIsEditing(true)}
+            className={`ml-3 text-base sm:text-lg font-medium break-words ${
+              task.completed ? 'line-through text-white/50' : 'text-white cursor-pointer hover:text-blue-300'
+            }`}
+            title="Click to edit"
+          >
+            {task.text}
+          </span>
+        )}
       </div>
       <div className="flex items-center space-x-2 sm:space-x-3 ml-8 sm:ml-4 w-full sm:w-auto justify-end">
         <span className={`text-sm font-mono ${isCurrent ? 'text-yellow-400' : 'text-white/70'}`}>
@@ -314,28 +394,104 @@ const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) =>
   );
 };
 
-const TaskList = ({ tasks, currentTaskId, isPaused, onToggle, onRemove, onStart }) => {
+const TaskList = ({ tasks, currentTaskId, isPaused, onToggle, onRemove, onStart, onEdit, onReorder }) => {
   const activeTasks = tasks.filter(t => !t.completed);
+  const [draggedTask, setDraggedTask] = useState(null);
+  const [dragOverTask, setDragOverTask] = useState(null);
+  
+  const handleDragStart = (e, task) => {
+    setDraggedTask(task);
+    e.dataTransfer.effectAllowed = 'move';
+    
+    // Create a custom drag image/ghost
+    const dragImg = e.currentTarget.cloneNode(true);
+    dragImg.style.position = 'absolute';
+    dragImg.style.top = '-1000px';
+    dragImg.style.width = e.currentTarget.offsetWidth + 'px';
+    dragImg.style.opacity = '0.9';
+    dragImg.style.transform = 'rotate(3deg)';
+    dragImg.style.boxShadow = '0 20px 60px rgba(96, 165, 250, 0.8)';
+    dragImg.style.border = '3px solid #60a5fa';
+    dragImg.style.borderRadius = '12px';
+    dragImg.style.backgroundColor = 'rgba(59, 130, 246, 0.3)';
+    document.body.appendChild(dragImg);
+    e.dataTransfer.setDragImage(dragImg, e.currentTarget.offsetWidth / 2, 30);
+    
+    // Clean up the drag image after a short delay
+    setTimeout(() => document.body.removeChild(dragImg), 0);
+  };
+
+  const handleDragOver = (e, task) => {
+    e.preventDefault();
+    if (draggedTask && draggedTask.id !== task.id) {
+      setDragOverTask(task);
+    }
+  };
+
+  const handleDrop = (e, dropTask) => {
+    e.preventDefault();
+    if (draggedTask && draggedTask.id !== dropTask.id) {
+      const dragIndex = activeTasks.findIndex(t => t.id === draggedTask.id);
+      const dropIndex = activeTasks.findIndex(t => t.id === dropTask.id);
+      
+      const newActiveTasks = [...activeTasks];
+      newActiveTasks.splice(dragIndex, 1);
+      newActiveTasks.splice(dropIndex, 0, draggedTask);
+      
+      // Update all tasks maintaining completed tasks order
+      const completedTasks = tasks.filter(t => t.completed);
+      onReorder([...newActiveTasks, ...completedTasks]);
+    }
+    setDraggedTask(null);
+    setDragOverTask(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedTask(null);
+    setDragOverTask(null);
+  };
   
   return (
     <div className="h-full flex flex-col">
       <h2 className="text-xl sm:text-2xl font-bold mb-4 flex items-center text-white">
         <List className="w-5 h-5 sm:w-6 sm:h-6 mr-2" /> Active Tasks
+        <span className="text-sm text-white/50 ml-2 font-normal">(drag to reorder)</span>
       </h2>
       <div className="flex-grow overflow-y-auto custom-scrollbar pr-2">
         {activeTasks.length === 0 ? (
           <p className="text-white/50 text-center py-10 text-sm sm:text-base">No active tasks. Add one to get started!</p>
         ) : (
           activeTasks.map((task) => (
-            <TaskItem
+            <div
               key={task.id}
-              task={task}
-              onToggle={onToggle}
-              onRemove={onRemove}
-              onStart={onStart}
-              isCurrent={task.id === currentTaskId}
-              isPaused={isPaused}
-            />
+              draggable={!task.completed}
+              onDragStart={(e) => handleDragStart(e, task)}
+              onDragOver={(e) => handleDragOver(e, task)}
+              onDrop={(e) => handleDrop(e, task)}
+              onDragEnd={handleDragEnd}
+              className="transition-all duration-200"
+              style={{
+                cursor: draggedTask?.id === task.id ? 'grabbing' : 'grab',
+                opacity: draggedTask?.id === task.id ? 0.3 : 1,
+                transform: draggedTask?.id === task.id ? 'scale(1.05) rotate(2deg)' : 'scale(1)',
+                borderTop: dragOverTask?.id === task.id && draggedTask ? '3px solid #60a5fa' : 'none',
+                paddingTop: dragOverTask?.id === task.id && draggedTask ? '8px' : '0',
+                boxShadow: draggedTask?.id === task.id ? '0 10px 40px rgba(96, 165, 250, 0.6), 0 0 0 3px rgba(96, 165, 250, 0.4)' : 'none',
+                borderRadius: draggedTask?.id === task.id ? '12px' : '0',
+                zIndex: draggedTask?.id === task.id ? 1000 : 'auto',
+                position: 'relative'
+              }}
+            >
+              <TaskItem
+                task={task}
+                onToggle={onToggle}
+                onRemove={onRemove}
+                onStart={onStart}
+                onEdit={onEdit}
+                isCurrent={task.id === currentTaskId}
+                isPaused={isPaused}
+              />
+            </div>
           ))
         )}
       </div>
@@ -407,67 +563,79 @@ const TimerDisplay = ({ currentTask, isPaused, motivationalMessage }) => {
     100 - (currentTask.timeRemaining / currentTask.initialTime) * 100;
 
   return (
-    <div className="flex flex-col items-center justify-center h-full relative py-4 sm:py-8 px-4">
+    <div className="flex flex-col items-center justify-center h-full relative py-4 sm:py-8 px-4" style={{ overflow: 'visible' }}>
       <h2 className="text-2xl sm:text-4xl font-bold text-white/90 mb-6 sm:mb-8 text-center tracking-tight break-words max-w-full">
         {currentTask.text}
       </h2>
       
-      <div className="relative w-64 h-64 sm:w-80 sm:h-80 mb-6 sm:mb-8 timer-display-mobile flex-shrink-0">
-        {/* Glow effect background */}
-        <div className="absolute inset-0 rounded-full timer-glow"></div>
+      {/* Wrapper with extra space for glow */}
+      <div className="relative mb-6 sm:mb-8 flex-shrink-0" style={{ overflow: 'visible', padding: '60px', width: 'fit-content' }}>
+        {/* Glow effect background - positioned absolutely to extend beyond */}
+        <div className="absolute timer-glow rounded-full" style={{ 
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          pointerEvents: 'none',
+          zIndex: 0
+        }}></div>
         
-        <svg className="w-full h-full transform -rotate-90 relative z-10" viewBox="0 0 256 256">
-          <defs>
-            <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#60a5fa" />
-              <stop offset="50%" stopColor="#a78bfa" />
-              <stop offset="100%" stopColor="#ec4899" />
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-          <circle
-            className="text-white/10"
-            strokeWidth="12"
-            stroke="currentColor"
-            fill="transparent"
-            r="120"
-            cx="128"
-            cy="128"
-          />
-          <motion.circle
-            strokeWidth="12"
-            strokeDasharray={2 * Math.PI * 120}
-            strokeDashoffset={2 * Math.PI * 120 * (1 - percentage / 100)}
-            strokeLinecap="round"
-            stroke="url(#timerGradient)"
-            fill="transparent"
-            filter="url(#glow)"
-            r="120"
-            cx="128"
-            cy="128"
-            initial={{ strokeDashoffset: 2 * Math.PI * 120 }}
-            animate={{ strokeDashoffset: 2 * Math.PI * 120 * (1 - percentage / 100) }}
-            transition={{ duration: 1, ease: 'linear' }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.p
-            key={currentTask.timeRemaining}
-            className={`text-5xl sm:text-8xl font-extrabold ${
-              isPaused ? 'text-red-400' : 'timer-text-gradient'
-            } drop-shadow-2xl timer-font`}
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-          >
-            {formatTime(currentTask.timeRemaining)}
-          </motion.p>
+        {/* Timer circle container */}
+        <div className="relative" style={{ overflow: 'visible', width: '320px', height: '320px', zIndex: 10 }}>
+          <svg className="w-full h-full transform -rotate-90 relative z-10" viewBox="0 0 256 256" style={{ overflow: 'visible' }}>
+            <defs>
+              <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#60a5fa" />
+                <stop offset="50%" stopColor="#a78bfa" />
+                <stop offset="100%" stopColor="#ec4899" />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <circle
+              className="text-white/10"
+              strokeWidth="12"
+              stroke="currentColor"
+              fill="transparent"
+              r="120"
+              cx="128"
+              cy="128"
+            />
+            <motion.circle
+              strokeWidth="12"
+              strokeDasharray={2 * Math.PI * 120}
+              strokeDashoffset={2 * Math.PI * 120 * (1 - percentage / 100)}
+              strokeLinecap="round"
+              stroke="url(#timerGradient)"
+              fill="transparent"
+              filter="url(#glow)"
+              r="120"
+              cx="128"
+              cy="128"
+              initial={{ strokeDashoffset: 2 * Math.PI * 120 }}
+              animate={{ strokeDashoffset: 2 * Math.PI * 120 * (1 - percentage / 100) }}
+              transition={{ duration: 1, ease: 'linear' }}
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center" style={{ overflow: 'visible' }}>
+            <motion.p
+              key={currentTask.timeRemaining}
+              className={`font-extrabold ${
+                isPaused ? 'text-red-400' : 'timer-text-gradient'
+              } drop-shadow-2xl timer-font`}
+              style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', whiteSpace: 'nowrap' }}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            >
+              {formatTime(currentTask.timeRemaining)}
+            </motion.p>
+          </div>
         </div>
       </div>
       
@@ -598,6 +766,9 @@ function App() {
   const [notification, setNotification] = useState(null);
   const [celebratingTask, setCelebratingTask] = useState(null);
   const [motivationalMessage, setMotivationalMessage] = useState(null);
+  const [countdownData, setCountdownData] = useState(null); // { taskName, countdown, nextTaskId }
+  const motivationIntervalRef = React.useRef(null);
+  const hasTriggeredCompletionRef = React.useRef(false);
 
   // Save tasks to localStorage whenever they change
   useEffect(() => {
@@ -636,10 +807,9 @@ function App() {
   // Timer Effect
   useEffect(() => {
     let interval = null;
-    let motivationInterval = null;
-    let motivationTimeout = null;
 
     if (currentTaskId && !isPaused && currentTask && currentTask.timeRemaining > 0) {
+      // Countdown interval (runs every second)
       interval = setInterval(() => {
         setTasks(prevTasks =>
           prevTasks.map(task => {
@@ -651,61 +821,83 @@ function App() {
         );
       }, 1000);
 
-      // Function to cycle motivational messages
-      const cycleMotivation = () => {
-        // Clear any existing message
-        setMotivationalMessage(null);
+      // Only set up motivation interval if it doesn't exist
+      if (!motivationIntervalRef.current) {
+        // Show initial motivation when task starts
+        setMotivationalMessage(getRandomMotivation());
         
-        // Show new message after a brief delay
-        motivationTimeout = setTimeout(() => {
+        // Change motivational message every 10 seconds
+        motivationIntervalRef.current = setInterval(() => {
           setMotivationalMessage(getRandomMotivation());
-        }, 100);
-      };
+        }, 10000); // 10 seconds per message
+      }
 
-      // Show initial motivation when task starts
-      cycleMotivation();
+    } else {
+      // Clear motivation interval when task stops
+      if (motivationIntervalRef.current) {
+        clearInterval(motivationIntervalRef.current);
+        motivationIntervalRef.current = null;
+        setMotivationalMessage(null);
+      }
       
-      // Show new motivational message every 10 seconds
-      motivationInterval = setInterval(() => {
-        cycleMotivation();
-      }, 10000); // Changed to 10 seconds
+      if (currentTask && currentTask.timeRemaining === 0 && !currentTask.completed && !hasTriggeredCompletionRef.current) {
+        // Task completed, auto-advance logic - ONLY TRIGGER ONCE
+        hasTriggeredCompletionRef.current = true;
+        clearInterval(interval);
+        setIsPaused(true);
 
-    } else if (currentTask && currentTask.timeRemaining === 0) {
-      // Task completed, auto-advance logic
-      clearInterval(interval);
-      setIsPaused(true);
+        // Show celebration animation
+        setCelebratingTask(currentTask.text);
 
-      // Show celebration animation
-      setCelebratingTask(currentTask.text);
+        // 1. Mark current task as completed immediately
+        setTasks(prevTasks =>
+          prevTasks.map(task =>
+            task.id === currentTaskId ? { ...task, completed: true, timeRemaining: 0 } : task
+          )
+        );
 
-      // 1. Mark current task as completed
-      setTasks(prevTasks =>
-        prevTasks.map(task =>
-          task.id === currentTaskId ? { ...task, completed: true, timeRemaining: 0 } : task
-        )
-      );
-
-      // 2. Find and prepare the next task (will start after celebration)
-      const nextTask = findNextTask();
-      if (nextTask) {
-        // Next task will be started after celebration completes
+        // 2. Find and prepare the next task (will start AFTER celebration)
+        const nextTask = findNextTask();
+        
+        // Wait for celebration to complete (2 seconds) before countdown
         setTimeout(() => {
-          showNotification(`Starting: "${nextTask.text}"`);
-          setCurrentTaskId(nextTask.id);
-          setIsPaused(false);
-        }, 2500);
-      } else {
-        setTimeout(() => {
-          showNotification('All tasks completed! Great job! 🎉');
-          setCurrentTaskId(null);
-        }, 2500);
+          setCelebratingTask(null); // Clear celebration
+          
+          if (nextTask) {
+            // Start 3-second countdown
+            setCountdownData({ taskName: nextTask.text, countdown: 3, nextTaskId: nextTask.id });
+            
+            // Countdown: 3
+            setTimeout(() => {
+              setCountdownData(prev => prev ? { ...prev, countdown: 2 } : null);
+            }, 1000);
+            
+            // Countdown: 2
+            setTimeout(() => {
+              setCountdownData(prev => prev ? { ...prev, countdown: 1 } : null);
+            }, 2000);
+            
+            // Countdown: 1 -> Start task
+            setTimeout(() => {
+              setCountdownData(null); // Clear countdown
+              showNotification(`Starting: "${nextTask.text}"`);
+              setCurrentTaskId(nextTask.id);
+              setIsPaused(false);
+              hasTriggeredCompletionRef.current = false; // Reset for next task
+            }, 3000);
+          } else {
+            setTimeout(() => {
+              showNotification('All tasks completed! Great job! 🎉');
+              setCurrentTaskId(null);
+              hasTriggeredCompletionRef.current = false; // Reset
+            }, 500);
+          }
+        }, 2000);
       }
     }
 
     return () => {
       clearInterval(interval);
-      if (motivationInterval) clearInterval(motivationInterval);
-      if (motivationTimeout) clearTimeout(motivationTimeout);
     };
   }, [currentTaskId, isPaused, currentTask, findNextTask]);
 
@@ -743,6 +935,16 @@ function App() {
     }
   };
 
+  const handleEditTask = (id, newText) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, text: newText } : task
+    ));
+  };
+
+  const handleReorderTasks = (newTasksOrder) => {
+    setTasks(newTasksOrder);
+  };
+
   const handleStartTask = (id) => {
     if (id === currentTaskId) {
       // Toggle pause/play for the current task
@@ -761,13 +963,25 @@ function App() {
   const timeSpentSeconds = tasks.reduce((sum, t) => sum + (t.initialTime - t.timeRemaining), 0);
 
   return (
-    <div className="p-2 sm:p-4 w-full min-h-screen flex flex-col items-center">
-      <AnimatePresence>
+    <div className="p-2 sm:p-4 w-full min-h-screen flex flex-col items-center" style={{ overflow: 'visible' }}>
+      <AnimatePresence mode="wait">
         {notification && <Notification message={notification} />}
+      </AnimatePresence>
+      
+      <AnimatePresence mode="wait">
         {celebratingTask && (
           <CompletionCelebration 
             taskName={celebratingTask} 
-            onComplete={() => setCelebratingTask(null)}
+            onComplete={() => {}} 
+          />
+        )}
+      </AnimatePresence>
+      
+      <AnimatePresence mode="wait">
+        {countdownData && (
+          <CountdownOverlay 
+            taskName={countdownData.taskName}
+            countdown={countdownData.countdown}
           />
         )}
       </AnimatePresence>
@@ -778,7 +992,7 @@ function App() {
       </h1>
       <div className="bento-grid">
         {/* Timer Display - No box, just the content */}
-        <div className="bento-item-1" style={{ minHeight: '400px' }}>
+        <div className="bento-item-1" style={{ minHeight: '400px', overflow: 'visible', padding: '40px 20px' }}>
           <TimerDisplay currentTask={currentTask} isPaused={isPaused} motivationalMessage={motivationalMessage} />
         </div>
 
@@ -793,6 +1007,8 @@ function App() {
               onToggle={handleToggleTask}
               onRemove={handleRemoveTask}
               onStart={handleStartTask}
+              onEdit={handleEditTask}
+              onReorder={handleReorderTasks}
             />
           </div>
         </div>
