@@ -93,34 +93,65 @@
 }
 
 
-/* Bento Grid Layout */
+/* Bento Grid Layout - Mobile First */
 .bento-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   grid-template-rows: auto;
-  gap: 16px;
+  gap: 12px;
   max-width: 1400px;
-  width: 90%;
-  margin: 40px auto;
+  width: 95%;
+  margin: 20px auto;
+  padding: 0 8px;
 }
 
 .bento-item-1 {
-  grid-column: span 4; /* Full width for the timer at the top */
+  grid-column: span 1; /* Full width for the timer on mobile */
 }
 
 .bento-item-2 {
-  grid-column: span 4; /* Full width for task list on mobile */
+  grid-column: span 1; /* Full width for task list on mobile */
 }
 
 .bento-item-3 {
-  grid-column: span 4; /* Full width for stats on mobile */
+  grid-column: span 1; /* Full width for stats on mobile */
 }
 
 .bento-item-4 {
-  grid-column: span 4; /* Full width for completed tasks on mobile */
+  grid-column: span 1; /* Full width for completed tasks on mobile */
 }
 
+/* Tablet breakpoint */
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 90%;
+    margin: 30px auto;
+  }
+
+  .bento-item-1 {
+    grid-column: span 2; /* Full width on tablet */
+  }
+  .bento-item-2 {
+    grid-column: span 2; /* Full width on tablet */
+  }
+  .bento-item-3 {
+    grid-column: span 1; /* Half width on tablet */
+  }
+  .bento-item-4 {
+    grid-column: span 1; /* Half width on tablet */
+  }
+}
+
+/* Desktop breakpoint */
 @media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 40px auto;
+  }
+
   .bento-item-1 {
     grid-column: span 4; /* Full width on large screens - TIMER AT TOP */
   }
@@ -276,6 +307,55 @@ h1, h2, h3, h4, h5, h6 {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.05em;
   font-weight: 800;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+
+  .bento-box-tasks,
+  .bento-box-stats,
+  .bento-box-completed {
+    padding: 16px !important;
+  }
+
+  /* Make timer text smaller on mobile */
+  .timer-font {
+    font-size: 3.5rem !important;
+  }
+
+  /* Adjust timer circle on mobile */
+  .timer-display-mobile svg {
+    width: 250px !important;
+    height: 250px !important;
+  }
+
+  /* Make motivational message responsive */
+  .motivational-message {
+    font-size: 1rem !important;
+    padding: 12px 20px !important;
+  }
+
+  /* Adjust task item spacing */
+  .task-item-mobile {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .task-item-mobile .task-actions {
+    width: 100%;
+    margin-top: 8px;
+    justify-content: flex-end;
+  }
+}
+
+/* Tablet responsive */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .timer-font {
+    font-size: 4.5rem !important;
+  }
 }
 
 /* iOS-style button enhancements */

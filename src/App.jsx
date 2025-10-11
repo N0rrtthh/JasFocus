@@ -53,7 +53,7 @@ const MotivationalMessage = ({ message }) => (
     animate={{ opacity: 1, scale: 1, y: 0 }}
     exit={{ opacity: 0, scale: 0.8, y: -20 }}
     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-    className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40"
+    className="fixed bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-40 px-4 max-w-[90vw]"
   >
     <motion.div
       animate={{ 
@@ -65,13 +65,13 @@ const MotivationalMessage = ({ message }) => (
         repeat: Infinity,
         repeatType: 'reverse'
       }}
-      className="glass-card p-4 px-8 rounded-2xl border-2 border-yellow-400/50 shadow-2xl"
+      className="glass-card p-3 px-6 sm:p-4 sm:px-8 rounded-2xl border-2 border-yellow-400/50 shadow-2xl motivational-message"
       style={{
         background: 'rgba(251, 191, 36, 0.15)',
         boxShadow: '0 0 30px rgba(251, 191, 36, 0.4), 0 0 60px rgba(251, 191, 36, 0.2)'
       }}
     >
-      <p className="text-white font-bold text-xl text-center whitespace-nowrap">
+      <p className="text-white font-bold text-base sm:text-xl text-center">
         {message}
       </p>
     </motion.div>
@@ -89,7 +89,7 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+      className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none px-4"
     >
       {/* Confetti particles */}
       {[...Array(30)].map((_, i) => (
@@ -123,7 +123,7 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        className="glass-card p-12 rounded-3xl border-4 border-green-400/50 shadow-2xl relative z-10"
+        className="glass-card p-8 sm:p-12 rounded-3xl border-4 border-green-400/50 shadow-2xl relative z-10 max-w-[90vw]"
         style={{
           background: 'rgba(34, 197, 94, 0.15)',
           boxShadow: '0 0 60px rgba(34, 197, 94, 0.4), 0 0 120px rgba(34, 197, 94, 0.2), inset 0 0 60px rgba(34, 197, 94, 0.1)'
@@ -141,15 +141,15 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
               scale: [1, 1.1, 1, 1.1, 1]
             }}
             transition={{ duration: 0.6, repeat: 2 }}
-            className="mb-6"
+            className="mb-4 sm:mb-6"
           >
-            <CheckCircle2 className="w-32 h-32 text-green-400 drop-shadow-lg success-checkmark" />
+            <CheckCircle2 className="w-20 h-20 sm:w-32 sm:h-32 text-green-400 drop-shadow-lg success-checkmark" />
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-5xl font-bold text-white mb-3 tracking-tight"
+            className="text-3xl sm:text-5xl font-bold text-white mb-2 sm:mb-3 tracking-tight"
           >
             Task Complete!
           </motion.h2>
@@ -157,7 +157,7 @@ const CompletionCelebration = ({ taskName, onComplete }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-2xl text-green-300 font-medium text-center max-w-md"
+            className="text-lg sm:text-2xl text-green-300 font-medium text-center max-w-md px-4"
           >
             "{taskName}"
           </motion.p>
@@ -173,12 +173,12 @@ const Notification = ({ message, onClose }) => (
     animate={{ opacity: 1, y: 0, scale: 1 }}
     exit={{ opacity: 0, y: -100, scale: 0.9 }}
     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-    className="fixed top-8 left-1/2 -translate-x-1/2 z-50 w-auto max-w-lg px-4"
+    className="fixed top-4 sm:top-8 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[90vw] sm:max-w-lg px-4"
   >
-    <div className="glass-card p-5 px-8 rounded-2xl border-2 border-green-400/50 shadow-2xl notification-glow">
+    <div className="glass-card p-4 px-6 sm:p-5 sm:px-8 rounded-2xl border-2 border-green-400/50 shadow-2xl notification-glow">
       <div className="flex items-center justify-center space-x-3">
-        <ArrowRight className="w-6 h-6 text-green-400 flex-shrink-0" />
-        <p className="text-white font-semibold text-lg text-center break-words">{message}</p>
+        <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-green-400 flex-shrink-0" />
+        <p className="text-white font-semibold text-base sm:text-lg text-center break-words">{message}</p>
       </div>
     </div>
   </motion.div>
@@ -234,24 +234,24 @@ const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) =>
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -50 }}
       transition={{ duration: 0.3 }}
-      className={`flex items-center justify-between p-3 mb-2 rounded-lg border ${statusClass} fade-in`}
+      className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 mb-2 rounded-lg border ${statusClass} fade-in gap-2 sm:gap-0`}
     >
-      <div className="flex items-center flex-grow min-w-0">
+      <div className="flex items-center flex-grow min-w-0 w-full sm:w-auto">
         <input
           type="checkbox"
           checked={task.completed}
           onChange={() => onToggle(task.id)}
-          className="form-checkbox h-5 w-5 text-blue-500 bg-white/10 border-white/30 rounded focus:ring-blue-500 transition duration-150 ease-in-out"
+          className="form-checkbox h-5 w-5 text-blue-500 bg-white/10 border-white/30 rounded focus:ring-blue-500 transition duration-150 ease-in-out flex-shrink-0"
         />
         <span
-          className={`ml-3 text-lg font-medium truncate ${
+          className={`ml-3 text-base sm:text-lg font-medium break-words ${
             task.completed ? 'line-through text-white/50' : 'text-white'
           }`}
         >
           {task.text}
         </span>
       </div>
-      <div className="flex items-center space-x-3 ml-4">
+      <div className="flex items-center space-x-2 sm:space-x-3 ml-8 sm:ml-4 w-full sm:w-auto justify-end">
         <span className={`text-sm font-mono ${isCurrent ? 'text-yellow-400' : 'text-white/70'}`}>
           {formatTime(task.timeRemaining)}
         </span>
@@ -260,7 +260,7 @@ const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) =>
             whileHover={{ scale: 1.1, y: -2 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => onStart(task.id)}
-            className={`p-2 h-10 w-10 flex items-center justify-center rounded-xl transition-all duration-300 shadow-lg border ${
+            className={`p-2 h-9 w-9 sm:h-10 sm:w-10 flex items-center justify-center rounded-xl transition-all duration-300 shadow-lg border ${
               isCurrent && !isPaused 
                 ? 'bg-gradient-to-br from-red-500 via-red-600 to-red-700 hover:from-red-600 hover:via-red-700 hover:to-red-800 border-red-400/30' 
                 : 'bg-gradient-to-br from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 border-green-400/30'
@@ -268,9 +268,9 @@ const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) =>
             title={isCurrent && !isPaused ? 'Pause' : 'Play'}
           >
             {isCurrent && !isPaused ? (
-              <Pause className="w-5 h-5 text-white" />
+              <Pause className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             ) : (
-              <Play className="w-5 h-5 ml-0.5 text-white" />
+              <Play className="w-4 h-4 sm:w-5 sm:h-5 ml-0.5 text-white" />
             )}
           </motion.button>
         )}
@@ -278,10 +278,10 @@ const TaskItem = ({ task, onToggle, onRemove, onStart, isCurrent, isPaused }) =>
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => onRemove(task.id)}
-          className="p-2 h-10 w-10 bg-gradient-to-br from-red-500/60 via-red-600/60 to-red-700/60 hover:from-red-600/70 hover:via-red-700/70 hover:to-red-800/70 flex items-center justify-center rounded-xl transition-all duration-300 shadow-lg border border-red-400/30"
+          className="p-2 h-9 w-9 sm:h-10 sm:w-10 bg-gradient-to-br from-red-500/60 via-red-600/60 to-red-700/60 hover:from-red-600/70 hover:via-red-700/70 hover:to-red-800/70 flex items-center justify-center rounded-xl transition-all duration-300 shadow-lg border border-red-400/30"
           title="Delete"
         >
-          <Trash2 className="w-5 h-5 text-white" />
+          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
         </motion.button>
       </div>
     </motion.div>
@@ -293,12 +293,12 @@ const TaskList = ({ tasks, currentTaskId, isPaused, onToggle, onRemove, onStart 
   
   return (
     <div className="h-full flex flex-col">
-      <h2 className="text-2xl font-bold mb-4 flex items-center text-white">
-        <List className="w-6 h-6 mr-2" /> Active Tasks
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 flex items-center text-white">
+        <List className="w-5 h-5 sm:w-6 sm:h-6 mr-2" /> Active Tasks
       </h2>
       <div className="flex-grow overflow-y-auto custom-scrollbar pr-2">
         {activeTasks.length === 0 ? (
-          <p className="text-white/50 text-center py-10">No active tasks. Add one to get started!</p>
+          <p className="text-white/50 text-center py-10 text-sm sm:text-base">No active tasks. Add one to get started!</p>
         ) : (
           activeTasks.map((task) => (
             <TaskItem
@@ -322,12 +322,12 @@ const CompletedTasksList = ({ tasks, onRemove }) => {
   
   return (
     <div className="h-full flex flex-col">
-      <h2 className="text-2xl font-bold mb-4 flex items-center text-white">
-        <CheckCircle2 className="w-6 h-6 mr-2 text-green-400" /> Completed Tasks
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 flex items-center text-white">
+        <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-green-400" /> Completed Tasks
       </h2>
       <div className="flex-grow overflow-y-auto custom-scrollbar pr-2">
         {completedTasks.length === 0 ? (
-          <p className="text-white/50 text-center py-10">No completed tasks yet.</p>
+          <p className="text-white/50 text-center py-10 text-sm sm:text-base">No completed tasks yet.</p>
         ) : (
           <AnimatePresence>
             {completedTasks.map((task) => (
@@ -336,15 +336,15 @@ const CompletedTasksList = ({ tasks, onRemove }) => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="flex items-center justify-between p-3 mb-2 rounded-lg border bg-green-500/10 border-green-500/30 fade-in"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 mb-2 rounded-lg border bg-green-500/10 border-green-500/30 fade-in gap-2 sm:gap-0"
               >
-                <div className="flex items-center flex-grow min-w-0">
-                  <CheckCircle2 className="w-5 h-5 text-green-400 mr-3" />
-                  <span className="text-lg font-medium line-through text-white/70 truncate">
+                <div className="flex items-center flex-grow min-w-0 w-full sm:w-auto">
+                  <CheckCircle2 className="w-5 h-5 text-green-400 mr-3 flex-shrink-0" />
+                  <span className="text-base sm:text-lg font-medium line-through text-white/70 break-words">
                     {task.text}
                   </span>
                 </div>
-                <div className="flex items-center space-x-3 ml-4">
+                <div className="flex items-center space-x-2 sm:space-x-3 ml-8 sm:ml-4 w-full sm:w-auto justify-end">
                   <span className="text-sm font-mono text-green-400">
                     {formatTime(task.initialTime)}
                   </span>
@@ -352,10 +352,10 @@ const CompletedTasksList = ({ tasks, onRemove }) => {
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onRemove(task.id)}
-                    className="p-2 h-10 w-10 bg-gradient-to-br from-red-500/60 via-red-600/60 to-red-700/60 hover:from-red-600/70 hover:via-red-700/70 hover:to-red-800/70 flex items-center justify-center rounded-xl transition-all duration-300 shadow-lg border border-red-400/30"
+                    className="p-2 h-9 w-9 sm:h-10 sm:w-10 bg-gradient-to-br from-red-500/60 via-red-600/60 to-red-700/60 hover:from-red-600/70 hover:via-red-700/70 hover:to-red-800/70 flex items-center justify-center rounded-xl transition-all duration-300 shadow-lg border border-red-400/30"
                     title="Delete"
                   >
-                    <Trash2 className="w-5 h-5 text-white" />
+                    <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </motion.button>
                 </div>
               </motion.div>
@@ -370,9 +370,9 @@ const CompletedTasksList = ({ tasks, onRemove }) => {
 const TimerDisplay = ({ currentTask, isPaused }) => {
   if (!currentTask) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-white/70">
-        <Clock className="w-20 h-20 mb-6" />
-        <p className="text-2xl font-light">Select a task to start the timer.</p>
+      <div className="flex flex-col items-center justify-center h-full text-white/70 py-8">
+        <Clock className="w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6" />
+        <p className="text-lg sm:text-2xl font-light text-center px-4">Select a task to start the timer.</p>
       </div>
     );
   }
@@ -381,12 +381,12 @@ const TimerDisplay = ({ currentTask, isPaused }) => {
     100 - (currentTask.timeRemaining / currentTask.initialTime) * 100;
 
   return (
-    <div className="flex flex-col items-center justify-center h-full relative py-8">
-      <h2 className="text-4xl font-bold text-white/90 mb-8 truncate max-w-full px-4 text-center tracking-tight">
+    <div className="flex flex-col items-center justify-center h-full relative py-4 sm:py-8">
+      <h2 className="text-2xl sm:text-4xl font-bold text-white/90 mb-6 sm:mb-8 px-4 text-center tracking-tight break-words max-w-full">
         {currentTask.text}
       </h2>
       
-      <div className="relative w-80 h-80 mb-8">
+      <div className="relative w-64 h-64 sm:w-80 sm:h-80 mb-6 sm:mb-8 timer-display-mobile">
         {/* Glow effect background */}
         <div className="absolute inset-0 rounded-full timer-glow"></div>
         
@@ -407,33 +407,33 @@ const TimerDisplay = ({ currentTask, isPaused }) => {
           </defs>
           <circle
             className="text-white/10"
-            strokeWidth="16"
+            strokeWidth="12"
             stroke="currentColor"
             fill="transparent"
-            r="150"
-            cx="160"
-            cy="160"
+            r="120"
+            cx="128"
+            cy="128"
           />
           <motion.circle
-            strokeWidth="16"
-            strokeDasharray={2 * Math.PI * 150}
-            strokeDashoffset={2 * Math.PI * 150 * (1 - percentage / 100)}
+            strokeWidth="12"
+            strokeDasharray={2 * Math.PI * 120}
+            strokeDashoffset={2 * Math.PI * 120 * (1 - percentage / 100)}
             strokeLinecap="round"
             stroke="url(#timerGradient)"
             fill="transparent"
             filter="url(#glow)"
-            r="150"
-            cx="160"
-            cy="160"
-            initial={{ strokeDashoffset: 2 * Math.PI * 150 }}
-            animate={{ strokeDashoffset: 2 * Math.PI * 150 * (1 - percentage / 100) }}
+            r="120"
+            cx="128"
+            cy="128"
+            initial={{ strokeDashoffset: 2 * Math.PI * 120 }}
+            animate={{ strokeDashoffset: 2 * Math.PI * 120 * (1 - percentage / 100) }}
             transition={{ duration: 1, ease: 'linear' }}
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.p
             key={currentTask.timeRemaining}
-            className={`text-8xl font-extrabold ${
+            className={`text-5xl sm:text-8xl font-extrabold ${
               isPaused ? 'text-red-400' : 'timer-text-gradient'
             } drop-shadow-2xl timer-font`}
             initial={{ scale: 0.9 }}
@@ -445,15 +445,15 @@ const TimerDisplay = ({ currentTask, isPaused }) => {
         </div>
       </div>
       
-      <div className={`flex items-center space-x-3 text-xl font-semibold ${isPaused ? 'text-red-400 pulse-animation' : 'text-green-400'}`}>
+      <div className={`flex items-center space-x-2 sm:space-x-3 text-base sm:text-xl font-semibold ${isPaused ? 'text-red-400 pulse-animation' : 'text-green-400'}`}>
         {isPaused ? (
           <>
-            <Pause className="w-7 h-7" />
+            <Pause className="w-5 h-5 sm:w-7 sm:h-7" />
             <span className="tracking-wide">Paused</span>
           </>
         ) : (
           <>
-            <Play className="w-7 h-7" />
+            <Play className="w-5 h-5 sm:w-7 sm:h-7" />
             <span className="tracking-wide">In Progress</span>
           </>
         )}
@@ -485,45 +485,47 @@ const TaskInput = ({ onAddTask }) => {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Task description (e.g., Code review)"
-        className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+        className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm sm:text-base"
       />
-      <div className="flex items-center space-x-3">
-        <Clock className="w-5 h-5 text-white/70" />
-        <div className="flex items-center space-x-2">
-          <input
-            type="number"
-            value={hours}
-            onChange={(e) => setHours(Math.max(0, parseInt(e.target.value) || 0))}
-            min="0"
-            className="w-16 p-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-          />
-          <span className="text-white/70 text-sm">hrs</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="number"
-            value={minutes}
-            onChange={(e) => setMinutes(Math.max(0, parseInt(e.target.value) || 0))}
-            min="0"
-            max="59"
-            className="w-16 p-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-          />
-          <span className="text-white/70 text-sm">min</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="number"
-            value={seconds}
-            onChange={(e) => setSeconds(Math.max(0, parseInt(e.target.value) || 0))}
-            min="0"
-            max="59"
-            className="w-16 p-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-          />
-          <span className="text-white/70 text-sm">sec</span>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <Clock className="w-5 h-5 text-white/70 hidden sm:block" />
+        <div className="flex items-center space-x-2 flex-wrap gap-2">
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              value={hours}
+              onChange={(e) => setHours(Math.max(0, parseInt(e.target.value) || 0))}
+              min="0"
+              className="w-14 sm:w-16 p-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
+            />
+            <span className="text-white/70 text-xs sm:text-sm">hrs</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              value={minutes}
+              onChange={(e) => setMinutes(Math.max(0, parseInt(e.target.value) || 0))}
+              min="0"
+              max="59"
+              className="w-14 sm:w-16 p-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
+            />
+            <span className="text-white/70 text-xs sm:text-sm">min</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              value={seconds}
+              onChange={(e) => setSeconds(Math.max(0, parseInt(e.target.value) || 0))}
+              min="0"
+              max="59"
+              className="w-14 sm:w-16 p-2 rounded-lg bg-white/10 border border-white/20 text-white text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
+            />
+            <span className="text-white/70 text-xs sm:text-sm">sec</span>
+          </div>
         </div>
         <Button
           type="submit"
-          className="flex-grow"
+          className="flex-grow w-full sm:w-auto"
           icon={Plus}
           variant="default"
         >
@@ -718,7 +720,7 @@ function App() {
   const timeSpentSeconds = tasks.reduce((sum, t) => sum + (t.initialTime - t.timeRemaining), 0);
 
   return (
-    <div className="p-4 w-full min-h-screen flex flex-col items-center">
+    <div className="p-2 sm:p-4 w-full min-h-screen flex flex-col items-center">
       <AnimatePresence>
         {notification && <Notification message={notification} />}
         {motivationalMessage && <MotivationalMessage message={motivationalMessage} />}
@@ -730,18 +732,18 @@ function App() {
         )}
       </AnimatePresence>
       
-      <h1 className="text-5xl font-extrabold text-white mb-8 drop-shadow-lg tracking-tight">
-        <Timer className="inline w-10 h-10 mr-2 text-blue-400" />
+      <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 sm:mb-8 drop-shadow-lg tracking-tight text-center">
+        <Timer className="inline w-8 h-8 sm:w-10 sm:h-10 mr-2 text-blue-400" />
         Jas Focus
       </h1>
       <div className="bento-grid">
         {/* Timer Display - No box, just the content */}
-        <div className="bento-item-1" style={{ minHeight: '450px' }}>
+        <div className="bento-item-1" style={{ minHeight: '350px' }}>
           <TimerDisplay currentTask={currentTask} isPaused={isPaused} />
         </div>
 
         {/* Bento Item 2: Task List and Input - Blue */}
-        <div className="bento-item-2 bento-box-tasks flex flex-col p-6" style={{ minHeight: '500px' }}>
+        <div className="bento-item-2 bento-box-tasks flex flex-col p-4 sm:p-6" style={{ minHeight: '400px' }}>
           <TaskInput onAddTask={handleAddTask} />
           <div className="mt-4 flex-grow">
             <TaskList
@@ -756,24 +758,24 @@ function App() {
         </div>
 
         {/* Bento Item 3: Stats and Controls - Purple */}
-        <div className="bento-item-3 bento-box-stats flex flex-col justify-between p-6" style={{ minHeight: '250px' }}>
-          <h2 className="text-2xl font-bold mb-4 flex items-center text-white tracking-tight">
-            <Clock className="w-6 h-6 mr-2" /> Progress
+        <div className="bento-item-3 bento-box-stats flex flex-col justify-between p-4 sm:p-6" style={{ minHeight: '250px' }}>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 flex items-center text-white tracking-tight">
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6 mr-2" /> Progress
           </h2>
           <div className="space-y-3">
-            <div className="flex justify-between items-center text-lg">
+            <div className="flex justify-between items-center text-base sm:text-lg">
               <span className="text-white/70">Total Tasks:</span>
               <span className="font-bold text-white">{totalTasks}</span>
             </div>
-            <div className="flex justify-between items-center text-lg">
+            <div className="flex justify-between items-center text-base sm:text-lg">
               <span className="text-white/70">Completed:</span>
               <span className="font-bold text-green-400">{completedTasks}</span>
             </div>
-            <div className="flex justify-between items-center text-lg">
+            <div className="flex justify-between items-center text-base sm:text-lg">
               <span className="text-white/70">Total Time:</span>
               <span className="font-bold text-white">{formatTime(totalTimeSeconds)}</span>
             </div>
-            <div className="flex justify-between items-center text-lg">
+            <div className="flex justify-between items-center text-base sm:text-lg">
               <span className="text-white/70">Time Spent:</span>
               <span className="font-bold text-yellow-400">{formatTime(timeSpentSeconds)}</span>
             </div>
@@ -789,7 +791,7 @@ function App() {
               setCurrentTaskId(null);
               setIsPaused(true);
             }}
-            className="mt-4 w-full"
+            className="mt-4 w-full text-sm sm:text-base"
             icon={Trash2}
             variant="danger"
           >
@@ -798,7 +800,7 @@ function App() {
         </div>
 
         {/* Bento Item 4: Completed Tasks - Green */}
-        <div className="bento-item-4 bento-box-completed flex flex-col p-6" style={{ minHeight: '300px' }}>
+        <div className="bento-item-4 bento-box-completed flex flex-col p-4 sm:p-6" style={{ minHeight: '250px' }}>
           <CompletedTasksList tasks={tasks} onRemove={handleRemoveTask} />
         </div>
       </div>
