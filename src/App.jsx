@@ -622,13 +622,13 @@ const TimerDisplay = ({ currentTask, isPaused, motivationalMessage }) => {
               transition={{ duration: 1, ease: 'linear' }}
             />
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center" style={{ overflow: 'visible' }}>
+          <div className="absolute inset-0 flex items-center justify-center" style={{ overflow: 'visible', zIndex: 20 }}>
             <motion.p
               key={currentTask.timeRemaining}
               className={`font-extrabold ${
                 isPaused ? 'text-red-400' : 'timer-text-gradient'
               } drop-shadow-2xl timer-font`}
-              style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', whiteSpace: 'nowrap' }}
+              style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', whiteSpace: 'nowrap', position: 'relative', zIndex: 20 }}
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
@@ -769,6 +769,8 @@ function App() {
   const [countdownData, setCountdownData] = useState(null); // { taskName, countdown, nextTaskId }
   const motivationIntervalRef = React.useRef(null);
   const hasTriggeredCompletionRef = React.useRef(false);
+  const timerStartTimeRef = React.useRef(null);
+  const initialTimeRemainingRef = React.useRef(null);
 
   // Save tasks to localStorage whenever they change
   useEffect(() => {
@@ -804,35 +806,72 @@ function App() {
     return nextTask;
   }, [tasks, currentTaskId]);
 
-  // Timer Effect
+  // Timer Effect with background counting support
   useEffect(() => {
     let interval = null;
 
     if (currentTaskId && !isPaused && currentTask && currentTask.timeRemaining > 0) {
-      // Countdown interval (runs every second)
-      interval = setInterval(() => {
+      // Only set start time if this is a new timer or resumed timer
+      if (!timerStartTimeRef.current || initialTimeRemainingRef.current !== currentTask.timeRemaining) {
+        timerStartTimeRef.current = Date.now();
+        initialTimeRemainingRef.current = currentTask.timeRemaining;
+        console.log('Timer started:', { startTime: new Date(timerStartTimeRef.current), timeRemaining: currentTask.timeRemaining });
+      }
+      
+      // Main timer that calculates based on elapsed time
+      const updateTimer = () => {
+        const now = Date.now();
+        const elapsedSeconds = Math.floor((now - timerStartTimeRef.current) / 1000);
+        const newTimeRemaining = Math.max(0, initialTimeRemainingRef.current - elapsedSeconds);
+        
+        console.log('Timer update:', { elapsed: elapsedSeconds, remaining: newTimeRemaining, hidden: document.hidden });
+        
         setTasks(prevTasks =>
           prevTasks.map(task => {
             if (task.id === currentTaskId) {
-              return { ...task, timeRemaining: task.timeRemaining - 1 };
+              return { ...task, timeRemaining: newTimeRemaining };
             }
             return task;
           })
         );
-      }, 1000);
+      };
+      
+      // Update immediately
+      updateTimer();
+      
+      // Then update every 500ms
+      interval = setInterval(updateTimer, 500);
+      
+      // Handle page visibility changes to force sync when user returns to tab
+      const handleVisibilityChange = () => {
+        console.log('Visibility changed:', { hidden: document.hidden });
+        if (!document.hidden) {
+          // Force immediate update when tab becomes visible
+          updateTimer();
+        }
+      };
+      
+      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       // Only set up motivation interval if it doesn't exist
       if (!motivationIntervalRef.current) {
-        // Show initial motivation when task starts
         setMotivationalMessage(getRandomMotivation());
-        
-        // Change motivational message every 10 seconds
         motivationIntervalRef.current = setInterval(() => {
           setMotivationalMessage(getRandomMotivation());
-        }, 10000); // 10 seconds per message
+        }, 10000);
       }
+      
+      // Cleanup function
+      return () => {
+        if (interval) clearInterval(interval);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
 
     } else {
+      // Clear timer refs when paused or stopped
+      timerStartTimeRef.current = null;
+      initialTimeRemainingRef.current = null;
+      
       // Clear motivation interval when task stops
       if (motivationIntervalRef.current) {
         clearInterval(motivationIntervalRef.current);
@@ -895,10 +934,6 @@ function App() {
         }, 2000);
       }
     }
-
-    return () => {
-      clearInterval(interval);
-    };
   }, [currentTaskId, isPaused, currentTask, findNextTask]);
 
   // Handlers
